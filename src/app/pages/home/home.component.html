@@ -1,3 +1,19 @@
-<h2>Olympic games app</h2>
-<hr />
-<p>{{ (olympics$ | async)?.length }} data loaded</p>
+
+<div class="titl"><h2>Medals per Country</h2></div>
+
+
+<div class="info">
+    <div class="blue-box">
+        <p class="txt" >Number of JOs : </p>
+        <p class="txt">{{ (olympics$ | async)?.[0]?.participations?.length || 0 }}</p>
+    </div>
+    <div class="blue-box">
+        <p class="txt" >Number of countries : </p>
+        <p class="txt">{{ (olympics$ | async)?.length || 0 }}</p>
+    </div>
+    
+   
+</div>
+
+<div id="chartContainer" style="height: 370px; width: 100%;"></div>
+
