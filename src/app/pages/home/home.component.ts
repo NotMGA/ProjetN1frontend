@@ -17,15 +17,15 @@ declare var CanvasJS: any;
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
-  // init data
+  // init data 
   public olympics$: Observable<Olympic[]> = of([]);
   public isMobile: boolean = false;
 
   constructor(private olympicService: OlympicService, private router: Router) {}
-  //detect the size of the window 
+  //detect the size of the window and adjuste the graph 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
-    this.isMobile = window.innerWidth <= 768; // Considérer <= 768px comme mobile
+    this.isMobile = window.innerWidth <= 768; 
     this.olympics$.subscribe(olympics => {
       this.renderChart(olympics);
     });
@@ -43,14 +43,12 @@ export class HomeComponent implements OnInit {
   }
 
   renderChart(olympics: Olympic[]) {
-      //set up data for the graph 
+      //setup data for the graph 
     const chartData = olympics.map(olympic => ({
       label: olympic.country,
       y: olympic.participations.reduce((totalMedals, participation) => totalMedals + participation.medalsCount, 0),
       participationsCount: olympic.participations.length,
     }));
-
-      //Graph bar set up 
     let chart = new CanvasJS.Chart("chartContainer", {
       animationEnabled: true,
       responsive: true,
@@ -63,7 +61,7 @@ export class HomeComponent implements OnInit {
         indexLabelPlacement: this.isMobile ? "inside" : "outside",
         indexLabelFontSize: this.isMobile ? 12 : 16,
         dataPoints: chartData,
-        // event click on any quarter to navigate to the desirade page 
+        // event click on any quarter to navigate to the desired page 
         click: (e: any) => {
           const country = e.dataPoint.label;
           this.router.navigate(['/pays', country]);

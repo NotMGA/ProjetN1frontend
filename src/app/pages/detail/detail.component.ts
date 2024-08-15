@@ -13,6 +13,7 @@
     templateUrl: './detail.component.html',
     styleUrls: ['./detail.component.scss']
   })
+  // init data 
   export class DetailComponant implements OnInit {
     public country: string = '';
     public olympics$: Observable<Olympic[]> = of([]);
@@ -25,8 +26,10 @@
       private olympicService: OlympicService,
       private router: Router
     ) {}
-  
+    // init the componante 
+    //  get the country inside the URL and the data coresponding to the country 
     ngOnInit() {
+      
       this.route.paramMap.subscribe(params => {
         this.country = params.get('country') ?? 'unknown';
         this.olympics$ = this.olympicService.getOlympics().pipe(
@@ -34,8 +37,8 @@
           map(olympics => olympics.filter(olympic => olympic && olympic.country === this.country))
         );
       });
-  
       this.olympics$.subscribe(olympics => {
+        // verifie if we have data 
         if (olympics && olympics.length > 0) {
           const selectedCountry = olympics[0];
   
@@ -49,8 +52,8 @@
   
             const chart = new CanvasJS.Chart("chartContainer", {
               animationEnabled: true,
-              axisX: { title: "Année" },
-              axisY: { title: "Nombre de médailles" },
+              axisX: { title: "Years" },
+              axisY: { title: "Nombre of medal" },
               data: [{
                 type: "column",
                 dataPoints: chartData
@@ -59,14 +62,14 @@
   
             chart.render();
           } else {
-            console.error(`Aucun pays trouvé avec le nom : ${this.country}`);
+            console.error(`No country found with the name : ${this.country}`);
           }
         } else {
-          console.error('Aucune donnée olympique trouvée.');
+          console.error('No Olympic data found.');
         }
       });
     }
-  
+  // calculate the adition of all athletes and all medal 
     calculateDetails(olympic: Olympic): void {
       if (olympic && olympic.participations) {
         this.Nbentry = olympic.participations.length;
