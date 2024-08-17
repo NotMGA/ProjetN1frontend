@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DetailComponant } from './detail.component';
-
+import { Router } from '@angular/router';
+let mockRouter: any;
 
 
 describe('DetailComponant', () => {
@@ -20,5 +21,9 @@ describe('DetailComponant', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+  it('should navigate to home when navigateToHome is called', () => {
+    component.navigateToHome();
+    expect(mockRouter.navigate).toHaveBeenCalledWith(['/']);
   });
 });

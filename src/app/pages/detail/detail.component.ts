@@ -26,8 +26,8 @@
       private olympicService: OlympicService,
       private router: Router
     ) {}
-    // init the componante 
-    //  get the country inside the URL and the data coresponding to the country 
+    // init the componants 
+    //  get the country inside the URL and the data corresponding to the country 
     ngOnInit() {
       
       this.route.paramMap.subscribe(params => {
@@ -38,7 +38,7 @@
         );
       });
       this.olympics$.subscribe(olympics => {
-        // verifie if we have data 
+        // verify if we have data 
         if (olympics && olympics.length > 0) {
           const selectedCountry = olympics[0];
   
@@ -69,7 +69,7 @@
         }
       });
     }
-  // calculate the adition of all athletes and all medal 
+  // calculate the addition of all athletes and all medals
     calculateDetails(olympic: Olympic): void {
       if (olympic && olympic.participations) {
         this.Nbentry = olympic.participations.length;
