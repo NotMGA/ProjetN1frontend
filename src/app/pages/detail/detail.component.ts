@@ -1,6 +1,6 @@
-  import { Component, OnInit } from '@angular/core';
+  import { Component, OnInit , OnDestroy } from '@angular/core';
   import { ActivatedRoute } from '@angular/router';
-  import { Observable, of } from 'rxjs';
+  import { Observable, of , Subscription } from 'rxjs';
   import { OlympicService } from 'src/app/core/services/olympic.service';
   import { Olympic } from 'src/app/core/models/Olympic';
   import { map } from 'rxjs/operators';
@@ -20,6 +20,7 @@
     public Nbentry: number = 0;
     public Tnbmedals: number = 0;
     public Tnbathletes: number = 0;
+    private olympicsDetailSubscription: Subscription = new Subscription();
   
     constructor(
       private route: ActivatedRoute,
@@ -29,15 +30,15 @@
     // init the componants 
     //  get the country inside the URL and the data corresponding to the country 
     ngOnInit() {
-      
-      this.route.paramMap.subscribe(params => {
+       // Subscribe to route paramMap and olympics$
+      const routeSubscription =this.route.paramMap.subscribe(params => {
         this.country = params.get('country') ?? 'unknown';
         this.olympics$ = this.olympicService.getOlympics().pipe(
           map(olympics => olympics || []),
           map(olympics => olympics.filter(olympic => olympic && olympic.country === this.country))
         );
       });
-      this.olympics$.subscribe(olympics => {
+      const olympicsSubscription = this.olympics$.subscribe(olympics => {
         // verify if we have data 
         if (olympics && olympics.length > 0) {
           const selectedCountry = olympics[0];
@@ -68,6 +69,12 @@
           console.error('No Olympic data found.');
         }
       });
+      this.olympicsDetailSubscription.add(routeSubscription);
+    this.olympicsDetailSubscription.add(olympicsSubscription);
+    }
+    ngOnDestroy(): void{
+       // Unsubscribe to prevent memory leaks
+       this.olympicsDetailSubscription.unsubscribe();
     }
   // calculate the addition of all athletes and all medals
     calculateDetails(olympic: Olympic): void {

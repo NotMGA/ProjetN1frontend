@@ -1,5 +1,5 @@
-import { Component, OnInit, HostListener } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
+import { Observable, of , Subscription } from 'rxjs';
 import { OlympicService } from 'src/app/core/services/olympic.service';
 import { Olympic } from 'src/app/core/models/Olympic';
 import { map } from 'rxjs';
@@ -16,19 +16,21 @@ declare var CanvasJS: any;
   templateUrl: './home.component.html', 
   styleUrls: ['./home.component.scss'],
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   // init data 
   public olympics$: Observable<Olympic[]> = of([]);
   public isMobile: boolean = false;
+  private olympicsSubscription: Subscription = new Subscription();
+  private olympicsData: Olympic[] = [];
 
   constructor(private olympicService: OlympicService, private router: Router) {}
   //detect the size of the window and adjuste the graph 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     this.isMobile = window.innerWidth <= 768; 
-    this.olympics$.subscribe(olympics => {
-      this.renderChart(olympics);
-    });
+    // Unsubscribe from the previous subscription if it exists
+    this.renderChart(this.olympicsData);
+
   }
 
   ngOnInit(): void {
@@ -37,9 +39,17 @@ export class HomeComponent implements OnInit {
       map(olympics => olympics ?? [])
     );
 
-    this.olympics$.subscribe(olympics => {
+    const olympicsSubscription = this.olympics$.subscribe(olympics => {
+      this.olympicsData = olympics;
       this.renderChart(olympics);
     });
+    this.olympicsSubscription.add(olympicsSubscription);
+  }
+  // Unsubscribe to prevent memory leaks
+  ngOnDestroy(): void{
+    if (this.olympicsSubscription) {
+      this.olympicsSubscription.unsubscribe(); // Unsubscribe to prevent memory leaks
+    }
   }
 
   renderChart(olympics: Olympic[]) {
