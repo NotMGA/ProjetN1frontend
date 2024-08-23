@@ -35,13 +35,13 @@ h2 {
 
 #chartContainer {
   width: 100%;
-  height: 400px; /* Définir une hauteur de base */
+  height: 400px; 
 
   @media (max-width: 768px) {
-    height: 300px; /* Réduire la hauteur sur les écrans plus petits */
+    height: 300px; 
   }
 
   @media (max-width: 480px) {
-    height: 250px; /* Encore plus petit pour les mobiles */
+    height: 250px; 
   }
 }

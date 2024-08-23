@@ -28,7 +28,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     this.isMobile = window.innerWidth <= 768; 
-    // Unsubscribe from the previous subscription if it exists
     this.renderChart(this.olympicsData);
 
   }
