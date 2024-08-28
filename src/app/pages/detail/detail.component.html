@@ -1,23 +1,15 @@
-
-<div class="titl"><h2>{{ country }}</h2></div>
-
+<div class="titl">
+  <h2>{{ country }}</h2>
+</div>
 
 <div class="info">
-    <div class="blue-box">
-        <p class="txt" >Number of entries </p>
-        <p class="txt">{{Nbentry}}</p>
-    </div>
-    <div class="blue-box">
-        <p class="txt" >Total numer medals </p>
-        <p class="txt">{{ Tnbmedals}}</p>
-    </div>
-    <div class="blue-box">
-        <p class="txt" >total number of athletes </p>
-        <p class="txt">{{ Tnbathletes }}</p>
-    </div>
-    
-   
+  <app-bluebox [txt]="'Number of entries'" [number]="Nbentry"></app-bluebox>
+  <app-bluebox [txt]="'Total number medals'" [number]="Tnbmedals"></app-bluebox>
+  <app-bluebox
+    [txt]="'Total number of athletes'"
+    [number]="Tnbathletes"
+  ></app-bluebox>
 </div>
-<div id="chartContainer" style="height: 370px; width: 100%;"></div>
+<div id="chartContainer"></div>
 
 <button (click)="navigateToHome()">Retour à l'accueil</button>

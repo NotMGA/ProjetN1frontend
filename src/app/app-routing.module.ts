@@ -2,20 +2,19 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './pages/home/home.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
-import { DetailComponant } from './pages/detail/detail.component'
+import { DetailComponant } from './pages/detail/detail.component';
 import { from } from 'rxjs';
 
 const routes: Routes = [
   {
     path: '',
-    component: HomeComponent, 
-    
+    component: HomeComponent,
   },
   {
-    path: 'pays/:country',
-    component: DetailComponant
+    path: 'pays/:id',
+    component: DetailComponant,
   },
-  
+
   {
     path: '**', // wildcard
     component: NotFoundComponent,

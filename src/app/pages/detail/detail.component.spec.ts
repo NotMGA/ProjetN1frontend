@@ -3,16 +3,14 @@ import { DetailComponant } from './detail.component';
 import { Router } from '@angular/router';
 let mockRouter: any;
 
-
 describe('DetailComponant', () => {
   let component: DetailComponant;
   let fixture: ComponentFixture<DetailComponant>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ DetailComponant ]
-    })
-    .compileComponents();
+      declarations: [DetailComponant],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(DetailComponant);
     component = fixture.componentInstance;
