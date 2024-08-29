@@ -5,6 +5,14 @@ import { Component, Input } from '@angular/core';
   styleUrl: './bluebox.component.scss',
 })
 export class BlueboxComponent {
+  /**
+   * Text label display int he blue box
+   * @type {string}
+   */
   @Input() txt: string = '';
+  /**
+   * Value displayed in the blue box related to the previous label
+   * @type {any}
+   */
   @Input() number: any = 0;
 }

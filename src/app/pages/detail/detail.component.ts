@@ -20,14 +20,17 @@ declare var CanvasJS: any;
  */
 export class DetailComponant implements OnInit, OnDestroy {
   /**
+   * Store the id of the current country
    * @type {string}
    */
   public id: string = '';
   /**
+   * Store the name of the current country
    * @type {string}
    */
   public country: string = '';
   /**
+   * Observable that holds an array of Olympic objects
    * @type {Observable<Olympic[]>}
    */
   public olympics$: Observable<Olympic[]> = of([]);
@@ -58,11 +61,11 @@ export class DetailComponant implements OnInit, OnDestroy {
     private olympicService: OlympicService,
     private router: Router
   ) {}
-  // init the componants
-  //  get the country inside the URL and the data corresponding to the country
-
+  /**
+   * Called aftter the component is initialized
+   * Subscribes to the olympic data and sets up the chart
+   */
   ngOnInit() {
-    // Subscribe to route paramMap and olympics$
     const routeSubscription = this.route.paramMap.subscribe((params) => {
       this.id = params.get('id') ?? 'unknown';
       this.olympics$ = this.olympicService.getOlympics().pipe(
@@ -73,7 +76,6 @@ export class DetailComponant implements OnInit, OnDestroy {
       );
     });
     const olympicsSubscription = this.olympics$.subscribe((olympics) => {
-      // verify if we have data
       if (olympics && olympics.length > 0) {
         const selectedCountry = olympics[0];
         this.country = selectedCountry.country;
@@ -108,8 +110,11 @@ export class DetailComponant implements OnInit, OnDestroy {
     this.olympicsDetailSubscription.add(routeSubscription);
     this.olympicsDetailSubscription.add(olympicsSubscription);
   }
+  /**
+   * Called when the componnent is destroyed
+   * unsubscribe all to prevent memory leaks
+   */
   ngOnDestroy(): void {
-    // Unsubscribe to prevent memory leaks
     this.olympicsDetailSubscription.unsubscribe();
   }
 

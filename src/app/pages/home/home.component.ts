@@ -12,21 +12,51 @@ declare var CanvasJS: any;
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
+/**
+ *  @class HomeComponent
+ * @implements {OnInit}
+ * @implements {OnDestroy}
+ */
 export class HomeComponent implements OnInit, OnDestroy {
-  // init data
+  /**
+   * Observable that holds an array of Olympic objects.
+   * @type {Observable<Olympic[]>}
+   */
   public olympics$: Observable<Olympic[]> = of([]);
+  /**
+   *  Boolean flag indicating whether the application is in mobile
+   * @type {boolean}
+   */
   public isMobile: boolean = false;
+  /**
+   *  Subscription object
+   * @type {Subscription}
+   */
   private olympicsSubscription: Subscription = new Subscription();
+  /**
+   *  Array that stores the  Olympic data
+   * @type {Olympic[]}
+   */
   private olympicsData: Olympic[] = [];
-
+  /**
+   * Constructor for HomeComponent
+   * @param olympicService Service to fetch Olympic data
+   * @param router  service for navigation
+   */
   constructor(private olympicService: OlympicService, private router: Router) {}
-  //detect the size of the window and adjuste the graph
+  /**
+   * Listener for the window resize to adjust the chart
+   * @param event resize event
+   */
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     this.isMobile = window.innerWidth <= 768;
     this.renderChart(this.olympicsData);
   }
-
+  /**
+   * Called aftter the component is initialized
+   * Subscribes to the olympic data and sets up the chart
+   */
   ngOnInit(): void {
     this.isMobile = window.innerWidth <= 768;
     this.olympics$ = this.olympicService
@@ -40,15 +70,20 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
     this.olympicsSubscription.add(olympicsSubscription);
   }
-  // Unsubscribe to prevent memory leaks
+  /**
+   * Called when the componnent is destroyed
+   * unsubscribe all to prevent memory leaks
+   */
   ngOnDestroy(): void {
     if (this.olympicsSubscription) {
-      this.olympicsSubscription.unsubscribe(); // Unsubscribe to prevent memory leaks
+      this.olympicsSubscription.unsubscribe();
     }
   }
-
+  /**
+   * Rends the charts with CanvasJS
+   * @param olympics Array of olympic data
+   */
   renderChart(olympics: Olympic[]) {
-    //setup data for the graph
     const chartData = olympics.map((olympic) => ({
       label: olympic.country,
       id: olympic.id,
@@ -67,11 +102,9 @@ export class HomeComponent implements OnInit, OnDestroy {
           startAngle: 240,
           yValueFormatString: '#,### médailles',
           indexLabel: '{label}',
-          // change the label of each country depending on the window
           indexLabelPlacement: this.isMobile ? 'inside' : 'outside',
           indexLabelFontSize: this.isMobile ? 12 : 16,
           dataPoints: chartData,
-          // event click on any quarter to navigate to the desired page
           click: (e: any) => {
             const country = e.dataPoint.label;
             const id = e.dataPoint.id;
@@ -80,7 +113,9 @@ export class HomeComponent implements OnInit, OnDestroy {
         },
       ],
     });
-
+    /**
+     * Render the chart
+     */
     chart.render();
   }
 }

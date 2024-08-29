@@ -4,7 +4,11 @@ import { HomeComponent } from './pages/home/home.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { DetailComponant } from './pages/detail/detail.component';
 import { from } from 'rxjs';
-
+/**
+ * Routes configuration for the application.
+ * Defines the navigation paths and their associated components.
+ * @type {Routes}
+ */
 const routes: Routes = [
   {
     path: '',

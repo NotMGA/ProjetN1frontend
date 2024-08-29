@@ -1,6 +1,9 @@
 <div class="titl"><h2>Medals per Country</h2></div>
 
 <div class="info">
+  <!-- 
+   component <app-bluebox> that displays information in a styled blue box.
+  -->
   <app-bluebox
     [txt]="'Number of JOs:'"
     [number]="(olympics$ | async)?.[0]?.participations?.length || 0"
