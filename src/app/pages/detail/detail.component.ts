@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable, of, Subscription } from 'rxjs';
 import { OlympicService } from 'src/app/core/services/olympic.service';
 import { Olympic } from 'src/app/core/models/Olympic';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
 declare var CanvasJS: any;
@@ -64,48 +64,50 @@ export class DetailComponant implements OnInit, OnDestroy {
   /**
    * Called aftter the component is initialized
    * Subscribes to the olympic data and sets up the chart
+   * redirect if the id is not in the array
    */
   ngOnInit() {
     const routeSubscription = this.route.paramMap.subscribe((params) => {
-      this.id = params.get('id') ?? 'unknown';
+      this.id = params.get('id') || 'unknown';
       this.olympics$ = this.olympicService.getOlympics().pipe(
         map((olympics) => olympics || []),
         map((olympics) =>
           olympics.filter((olympic) => olympic && olympic.id === +this.id)
-        )
+        ),
+        tap((filteredOlympics) => {
+          if (filteredOlympics.length === 0) {
+            this.navigateToHome();
+          }
+        })
       );
     });
     const olympicsSubscription = this.olympics$.subscribe((olympics) => {
-      if (olympics && olympics.length > 0) {
-        const selectedCountry = olympics[0];
-        this.country = selectedCountry.country;
-
-        this.calculateDetails(selectedCountry);
-
-        const chartData = selectedCountry.participations.map(
-          (participation) => ({
-            label: participation.year.toString(),
-            y: participation.medalsCount,
-          })
-        );
-
-        const chart = new CanvasJS.Chart('chartContainer', {
-          animationEnabled: true,
-          axisX: { title: 'Years' },
-          axisY: { title: 'Nombre of medal' },
-          data: [
-            {
-              type: 'column',
-              dataPoints: chartData,
-            },
-          ],
-        });
-
-        chart.render();
-      } else {
-        console.error('No Olympic data found.');
-        this.navigateToHome();
+      const selectedCountry = olympics[0];
+      if (!olympics || olympics.length === 0) {
+        return;
       }
+      this.country = selectedCountry.country;
+
+      this.calculateDetails(selectedCountry);
+
+      const chartData = selectedCountry.participations.map((participation) => ({
+        label: participation.year.toString(),
+        y: participation.medalsCount,
+      }));
+
+      const chart = new CanvasJS.Chart('chartContainer', {
+        animationEnabled: true,
+        axisX: { title: 'Years' },
+        axisY: { title: 'Nombre of medal' },
+        data: [
+          {
+            type: 'column',
+            dataPoints: chartData,
+          },
+        ],
+      });
+
+      chart.render();
     });
     this.olympicsDetailSubscription.add(routeSubscription);
     this.olympicsDetailSubscription.add(olympicsSubscription);

@@ -66,7 +66,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     const olympicsSubscription = this.olympics$.subscribe((olympics) => {
       this.olympicsData = olympics;
       this.renderChart(olympics);
-      console.log(olympics);
     });
     this.olympicsSubscription.add(olympicsSubscription);
   }
